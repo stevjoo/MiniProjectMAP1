@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/daftarCatatanFragment">
+
+    <fragment
+        android:id="@+id/daftarCatatanFragment"
+        android:name="com.example.miniprojectmap1.DaftarCatatanFragment"
+        android:label="Daftar Catatan">
+        <action
+            android:id="@+id/action_daftarCatatanFragment_to_detailCatatanFragment"
+            app:destination="@id/detailCatatanFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailCatatanFragment"
+        android:name="com.example.miniprojectmap1.DetailCatatanFragment"
+        android:label="Detail Catatan">
+        <argument
+            android:name="isiCatatan"
+            app:argType="string"/>
+    </fragment>
+</navigation>
