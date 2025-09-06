@@ -10,7 +10,7 @@
         android:name="com.example.miniprojectmap1.DaftarCatatanFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <View
         android:layout_width="1dp"
@@ -19,9 +19,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detail_catatan_container"
-        android:name="com.example.miniprojectmap1.DetailCatatanFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2" />
-
+        android:layout_weight="2"/>
 </LinearLayout>

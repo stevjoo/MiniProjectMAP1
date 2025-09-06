@@ -16,9 +16,17 @@ class DetailCatatanFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_detail_catatan, container, false)
 
         val tvDetail = view.findViewById<TextView>(R.id.tvDetailCatatan)
+
+        // Aman jika fragment statis dibuat tanpa argument
         val args = arguments?.let { DetailCatatanFragmentArgs.fromBundle(it) }
         tvDetail.text = args?.isiCatatan ?: "Tidak ada catatan dipilih"
 
         return view
+    }
+
+    companion object {
+        fun newInstance(defaultText: String) = DetailCatatanFragment().apply {
+            arguments = Bundle().apply { putString("isiCatatan", defaultText) }
+        }
     }
 }

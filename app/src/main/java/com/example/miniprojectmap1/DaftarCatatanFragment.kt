@@ -19,14 +19,33 @@ class DaftarCatatanFragment : Fragment() {
         val btnNote1 = view.findViewById<Button>(R.id.note_1_button)
         val btnNote2 = view.findViewById<Button>(R.id.note_2_button)
 
+        // Cek apakah dual pane (detail_catatan_container ada)
+        val isDualPane = activity?.findViewById<View>(R.id.detail_catatan_container) != null
+
         btnNote1.setOnClickListener {
-            val action = DaftarCatatanFragmentDirections.actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 1")
-            findNavController().navigate(action)
+            if (isDualPane) {
+                // Update fragment kanan langsung
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.detail_catatan_container, DetailCatatanFragment.newInstance("Isi catatan 1"))
+                    ?.commit()
+            } else {
+                // Navigate pakai Safe Args untuk HP
+                val action = DaftarCatatanFragmentDirections
+                    .actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 1")
+                findNavController().navigate(action)
+            }
         }
 
         btnNote2.setOnClickListener {
-            val action = DaftarCatatanFragmentDirections.actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 2")
-            findNavController().navigate(action)
+            if (isDualPane) {
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.detail_catatan_container, DetailCatatanFragment.newInstance("Isi catatan 2"))
+                    ?.commit()
+            } else {
+                val action = DaftarCatatanFragmentDirections
+                    .actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 2")
+                findNavController().navigate(action)
+            }
         }
 
         return view
