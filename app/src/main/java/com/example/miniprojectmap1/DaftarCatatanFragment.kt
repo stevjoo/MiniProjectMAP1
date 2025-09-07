@@ -1,14 +1,21 @@
 package com.example.miniprojectmap1
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class DaftarCatatanFragment : Fragment() {
+
+    private val notes = mutableListOf<Note>()
+    private lateinit var adapter: NoteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,38 +23,55 @@ class DaftarCatatanFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_daftar_catatan, container, false)
 
-        val btnNote1 = view.findViewById<Button>(R.id.note_1_button)
-        val btnNote2 = view.findViewById<Button>(R.id.note_2_button)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvNotes)
+        val btnAddNote = view.findViewById<View>(R.id.btnAddNote)
 
-        // Cek apakah dual pane (detail_catatan_container ada)
-        val isDualPane = activity?.findViewById<View>(R.id.detail_catatan_container) != null
-
-        btnNote1.setOnClickListener {
+        adapter = NoteAdapter(notes) { note ->
+            val isDualPane = activity?.findViewById<View>(R.id.detail_catatan_container) != null
             if (isDualPane) {
-                // Update fragment kanan langsung
                 activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.detail_catatan_container, DetailCatatanFragment.newInstance("Isi catatan 1"))
+                    ?.replace(R.id.detail_catatan_container,
+                        DetailCatatanFragment.newInstance(note.content))
                     ?.commit()
             } else {
-                // Navigate pakai Safe Args untuk HP
                 val action = DaftarCatatanFragmentDirections
-                    .actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 1")
+                    .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
                 findNavController().navigate(action)
             }
         }
 
-        btnNote2.setOnClickListener {
-            if (isDualPane) {
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.detail_catatan_container, DetailCatatanFragment.newInstance("Isi catatan 2"))
-                    ?.commit()
-            } else {
-                val action = DaftarCatatanFragmentDirections
-                    .actionDaftarCatatanFragmentToDetailCatatanFragment("Isi catatan 2")
-                findNavController().navigate(action)
-            }
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+        btnAddNote.setOnClickListener {
+            showAddNoteDialog()
         }
 
         return view
+    }
+
+    private fun showAddNoteDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_add_note, null)
+
+        val etTitle = dialogView.findViewById<EditText>(R.id.etNoteTitle)
+        val etContent = dialogView.findViewById<EditText>(R.id.etNoteContent)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Tambah Catatan")
+            .setView(dialogView)
+            .setPositiveButton("Simpan") { _, _ ->
+                val title = etTitle.text.toString()
+                val content = etContent.text.toString()
+                if (title.isNotEmpty() && content.isNotEmpty()) {
+                    notes.add(Note(title, content))
+                    adapter.notifyItemInserted(notes.size - 1)
+                } else {
+                    Toast.makeText(requireContext(),
+                        "Judul dan isi tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
     }
 }
