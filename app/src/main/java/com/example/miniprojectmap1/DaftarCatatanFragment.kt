@@ -1,6 +1,5 @@
 package com.example.miniprojectmap1
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +33,6 @@ class DaftarCatatanFragment : Fragment() {
 
         setupRecyclerView()
 
-        // Observasi perubahan data
         viewModel.notes.observe(viewLifecycleOwner) { notes ->
             adapter.updateData(notes)
         }
@@ -46,10 +44,27 @@ class DaftarCatatanFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = NoteAdapter(emptyList()) { note ->
-            // Gunakan navigation component
-            val action = DaftarCatatanFragmentDirections
-                .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
-            findNavController().navigate(action)
+            val isiCatatan = note.content
+            val detailFragment = DetailCatatanFragment().apply {
+                arguments = Bundle().apply {
+                    putString("isiCatatan", isiCatatan)
+                }
+            }
+
+            val activity = requireActivity()
+
+            // Cek apakah ada container detail (dual-pane / tablet)
+            if (activity.findViewById<View>(R.id.detail_catatan_container) != null) {
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.detail_catatan_container, detailFragment)
+                    .commit()
+            } else {
+                // Safe Args navigasi kalau single-pane (HP / portrait)
+                val action =
+                    DaftarCatatanFragmentDirections
+                        .actionDaftarCatatanFragmentToDetailCatatanFragment(isiCatatan)
+                findNavController().navigate(action)
+            }
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -63,7 +78,7 @@ class DaftarCatatanFragment : Fragment() {
         val etTitle = dialogView.findViewById<EditText>(R.id.etNoteTitle)
         val etContent = dialogView.findViewById<EditText>(R.id.etNoteContent)
 
-        AlertDialog.Builder(requireContext())
+        android.app.AlertDialog.Builder(requireContext())
             .setTitle("Tambah Catatan")
             .setView(dialogView)
             .setPositiveButton("Simpan") { _, _ ->
@@ -72,8 +87,11 @@ class DaftarCatatanFragment : Fragment() {
                 if (title.isNotEmpty() && content.isNotEmpty()) {
                     viewModel.tambahCatatan(Note(title, content))
                 } else {
-                    Toast.makeText(requireContext(),
-                        "Judul dan isi tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Judul dan isi tidak boleh kosong",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .setNegativeButton("Batal", null)

@@ -16,19 +16,19 @@ class DetailCatatanFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_detail_catatan, container, false)
+        return inflater.inflate(R.layout.fragment_detail_catatan, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val tvDetail = view.findViewById<TextView>(R.id.tvDetailCatatan)
 
-        // Gunakan args yang aman dari navigation component
-        tvDetail.text = args.isiCatatan ?: "Tidak ada catatan dipilih"
-
-        return view
-    }
-
-    companion object {
-        fun newInstance(defaultText: String) = DetailCatatanFragment().apply {
-            arguments = Bundle().apply { putString("isiCatatan", defaultText) }
+        // Ambil data dengan Safe Args (fallback tetap ada)
+        val isiCatatan = args.isiCatatan.ifEmpty {
+            arguments?.getString("isiCatatan") ?: "Tidak ada catatan dipilih"
         }
+
+        tvDetail.text = isiCatatan
     }
 }
