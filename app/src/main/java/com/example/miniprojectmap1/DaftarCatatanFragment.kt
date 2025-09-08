@@ -8,26 +8,45 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class DaftarCatatanFragment : Fragment() {
 
-    private val notes = mutableListOf<Note>()
+    private val viewModel: CatatanViewModel by activityViewModels()
     private lateinit var adapter: NoteAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_daftar_catatan, container, false)
+        return inflater.inflate(R.layout.fragment_daftar_catatan, container, false)
+    }
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rvNotes)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerView = view.findViewById(R.id.rvNotes)
         val btnAddNote = view.findViewById<View>(R.id.btnAddNote)
 
-        adapter = NoteAdapter(notes) { note ->
-            // Selalu gunakan navigation component untuk konsistensi
+        setupRecyclerView()
+
+        // Observasi perubahan data
+        viewModel.notes.observe(viewLifecycleOwner) { notes ->
+            adapter.updateData(notes)
+        }
+
+        btnAddNote.setOnClickListener {
+            showAddNoteDialog()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        adapter = NoteAdapter(emptyList()) { note ->
+            // Gunakan navigation component
             val action = DaftarCatatanFragmentDirections
                 .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
             findNavController().navigate(action)
@@ -35,12 +54,6 @@ class DaftarCatatanFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-
-        btnAddNote.setOnClickListener {
-            showAddNoteDialog()
-        }
-
-        return view
     }
 
     private fun showAddNoteDialog() {
@@ -57,8 +70,7 @@ class DaftarCatatanFragment : Fragment() {
                 val title = etTitle.text.toString()
                 val content = etContent.text.toString()
                 if (title.isNotEmpty() && content.isNotEmpty()) {
-                    notes.add(Note(title, content))
-                    adapter.notifyItemInserted(notes.size - 1)
+                    viewModel.tambahCatatan(Note(title, content))
                 } else {
                     Toast.makeText(requireContext(),
                         "Judul dan isi tidak boleh kosong", Toast.LENGTH_SHORT).show()
