@@ -9,14 +9,16 @@
         android:id="@+id/etNoteTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Judul" />
+        android:hint="Judul Catatan"
+        android:inputType="textCapWords" />
 
     <EditText
         android:id="@+id/etNoteContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Isi catatan"
+        android:hint="Isi Catatan"
         android:inputType="textMultiLine"
         android:minLines="3"
-        android:gravity="top"/>
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>

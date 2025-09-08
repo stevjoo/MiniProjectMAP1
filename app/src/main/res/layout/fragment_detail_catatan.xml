@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/tvDetailCatatan"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Detail Catatan akan muncul di sini"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:text="Detail catatan akan ditampilkan di sini" />
+
 </LinearLayout>

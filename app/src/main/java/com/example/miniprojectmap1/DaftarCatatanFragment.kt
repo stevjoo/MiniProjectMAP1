@@ -27,17 +27,10 @@ class DaftarCatatanFragment : Fragment() {
         val btnAddNote = view.findViewById<View>(R.id.btnAddNote)
 
         adapter = NoteAdapter(notes) { note ->
-            val isDualPane = activity?.findViewById<View>(R.id.detail_catatan_container) != null
-            if (isDualPane) {
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.detail_catatan_container,
-                        DetailCatatanFragment.newInstance(note.content))
-                    ?.commit()
-            } else {
-                val action = DaftarCatatanFragmentDirections
-                    .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
-                findNavController().navigate(action)
-            }
+            // Selalu gunakan navigation component untuk konsistensi
+            val action = DaftarCatatanFragmentDirections
+                .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
+            findNavController().navigate(action)
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
