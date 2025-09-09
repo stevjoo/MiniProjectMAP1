@@ -12,37 +12,48 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+// Fragment ini buat nampilin daftar catatan sama tombol tambah catatan
 class DaftarCatatanFragment : Fragment() {
 
+    // List buat nyimpan catatan
     private val notes = mutableListOf<Note>()
     private lateinit var adapter: NoteAdapter
 
+    // Lifecycle Fragment: dipanggil pas UI fragment dibuat
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate layout buat fragment ini
         val view = inflater.inflate(R.layout.fragment_daftar_catatan, container, false)
 
+        // Ambil RecyclerView sama tombol dari layout
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvNotes)
         val btnAddNote = view.findViewById<View>(R.id.btnAddNote)
 
+        // Adapter untuk RecyclerView
         adapter = NoteAdapter(notes) { note ->
+            // Cek apakah ada mode dual-pane
             val isDualPane = activity?.findViewById<View>(R.id.detail_catatan_container) != null
             if (isDualPane) {
+                // kalo dual-pane -> tampilkan fragment detail di container kanan
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.detail_catatan_container,
-                        DetailCatatanFragment.newInstance(note.content))
+                        DetailCatatanFragment.newInstance(note.content)) // dynamic fragment
                     ?.commit()
             } else {
+                // kalo layar kecil -> pindah fragmentnya menggunakan Jetpack Navigation
                 val action = DaftarCatatanFragmentDirections
                     .actionDaftarCatatanFragmentToDetailCatatanFragment(note.content)
                 findNavController().navigate(action)
             }
         }
 
+        // Atur RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        // Klik tombol "Tambah Catatan"
         btnAddNote.setOnClickListener {
             showAddNoteDialog()
         }
@@ -50,6 +61,7 @@ class DaftarCatatanFragment : Fragment() {
         return view
     }
 
+    // buka dialog buat menambahkan catatan baru
     private fun showAddNoteDialog() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_add_note, null)

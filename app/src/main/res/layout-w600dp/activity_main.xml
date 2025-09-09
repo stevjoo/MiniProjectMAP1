@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <!-- Static fragment buat daftar catatan -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/daftar_catatan_container"
         android:name="com.example.miniprojectmap1.DaftarCatatanFragment"
@@ -17,6 +18,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray"/>
 
+    <!-- Container kosong buat nampilin detailnya secara dinamis -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detail_catatan_container"
         android:layout_width="0dp"

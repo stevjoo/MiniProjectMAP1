@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Navigation Graph buat Jetpack Navigation -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/daftarCatatanFragment">
 
+    <!-- Fragment daftar catatan -->
     <fragment
         android:id="@+id/daftarCatatanFragment"
         android:name="com.example.miniprojectmap1.DaftarCatatanFragment"
@@ -13,6 +15,7 @@
             app:destination="@id/detailCatatanFragment"/>
     </fragment>
 
+    <!-- Fragment detail catatan -->
     <fragment
         android:id="@+id/detailCatatanFragment"
         android:name="com.example.miniprojectmap1.DetailCatatanFragment"

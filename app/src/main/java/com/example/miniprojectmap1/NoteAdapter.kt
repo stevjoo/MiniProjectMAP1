@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
+// Adapter buat nampilin daftar catatan di RecyclerView
 class NoteAdapter(
     private val notes: List<Note>,
     private val onClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
-
+    // ViewHolder buat setiap item note-nya
     inner class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitle: TextView = view.findViewById(R.id.tvNoteTitle)
     }
